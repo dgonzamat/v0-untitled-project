@@ -1,0 +1,166 @@
+@import "../styles/design-tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: var(--color-white);
+    --foreground: var(--color-gray-900);
+
+    --card: var(--color-white);
+    --card-foreground: var(--color-gray-900);
+
+    --popover: var(--color-white);
+    --popover-foreground: var(--color-gray-900);
+
+    --primary: var(--color-primary-600);
+    --primary-foreground: var(--color-white);
+
+    --secondary: var(--color-gray-100);
+    --secondary-foreground: var(--color-gray-900);
+
+    --muted: var(--color-gray-100);
+    --muted-foreground: var(--color-gray-500);
+
+    --accent: var(--color-accent-500);
+    --accent-foreground: var(--color-white);
+
+    --destructive: var(--color-error-500);
+    --destructive-foreground: var(--color-white);
+
+    --border: var(--color-gray-200);
+    --input: var(--color-gray-200);
+    --ring: var(--color-gray-900);
+
+    --radius: var(--radius-md);
+
+    --chart-1: var(--color-primary-600);
+    --chart-2: var(--color-primary-400);
+    --chart-3: var(--color-primary-800);
+    --chart-4: var(--color-gray-500);
+    --chart-5: var(--color-gray-300);
+    --chart-6: var(--color-gray-100);
+  }
+
+  .dark {
+    --background: var(--color-gray-900);
+    --foreground: var(--color-gray-50);
+
+    --card: var(--color-gray-800);
+    --card-foreground: var(--color-gray-50);
+
+    --popover: var(--color-gray-800);
+    --popover-foreground: var(--color-gray-50);
+
+    --primary: var(--color-primary-500);
+    --primary-foreground: var(--color-gray-50);
+
+    --secondary: var(--color-gray-700);
+    --secondary-foreground: var(--color-gray-50);
+
+    --muted: var(--color-gray-700);
+    --muted-foreground: var(--color-gray-400);
+
+    --accent: var(--color-accent-500);
+    --accent-foreground: var(--color-gray-50);
+
+    --destructive: var(--color-error-500);
+    --destructive-foreground: var(--color-gray-50);
+
+    --border: var(--color-gray-700);
+    --input: var(--color-gray-700);
+    --ring: var(--color-gray-300);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: var(--font-family-sans);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight;
+  }
+  h1 {
+    @apply text-3xl md:text-4xl;
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+  }
+  h2 {
+    @apply text-2xl md:text-3xl;
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+  }
+  h3 {
+    @apply text-xl md:text-2xl;
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+  }
+  h4 {
+    @apply text-lg md:text-xl;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-tight);
+  }
+  p {
+    @apply leading-normal;
+    line-height: var(--line-height-normal);
+  }
+}
+
+@layer utilities {
+  .animate-fadeIn {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+
+  .animation-delay-100 {
+    animation-delay: 0.1s;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Utilidades para espaciado consistente */
+  .section-spacing {
+    @apply py-8 md:py-12;
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  .content-spacing {
+    @apply py-4 md:py-6;
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+  }
+
+  .element-spacing {
+    @apply py-2 md:py-3;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+}
