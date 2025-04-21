@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import {
   ChevronLeft,
   Download,
-  BriefcaseBusiness,
+  Briefcase,
   UserCheck,
   TrendingUp,
   Zap,
@@ -197,7 +197,7 @@ export default function InfographicPage() {
 
                 <div className="border rounded-xl p-6 text-center hover:shadow-md transition-shadow flex flex-col items-center">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                    <BriefcaseBusiness className="h-8 w-8 text-blue-600" />
+                    <Briefcase className="h-8 w-8 text-blue-600" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Eficiencia Operativa</h3>
                   <p className="text-gray-600">

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { Shield, BriefcaseBusiness, TrendingUp, Zap, CheckCircle, BarChart, Download, Globe } from "lucide-react"
+import { Shield, Briefcase, TrendingUp, Zap, CheckCircle, BarChart, Download, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function SinglePageInfographic() {
@@ -77,7 +77,7 @@ export default function SinglePageInfographic() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <BriefcaseBusiness className="h-5 w-5 text-blue-600" />
+                    <Briefcase className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-blue-800">Eficiencia Operativa</h3>

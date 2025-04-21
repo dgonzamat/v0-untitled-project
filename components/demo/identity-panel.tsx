@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { AlertCircle, Check, Shield, User, Scan, CheckSquare } from "lucide-react"
-import { useEffect } from "react"
 
 interface IdentityPanelProps {
   faceScanComplete: boolean
@@ -20,30 +19,6 @@ export function IdentityPanel({
   startFaceScan,
   completeIdentity,
 }: IdentityPanelProps) {
-  // Asegurar que el panel de identidad maneje correctamente todos los estados
-  useEffect(() => {
-    // Si el panel está visible pero no se ha iniciado el escaneo, mostrar instrucciones
-    if (!faceScanComplete && !faceDetected) {
-      // El panel está listo para iniciar el escaneo
-      console.log("Panel de identidad listo para escaneo")
-    }
-
-    // Cuando se completa el escaneo facial, actualizar la UI
-    if (faceScanComplete) {
-      console.log("Escaneo facial completado")
-    }
-  }, [faceScanComplete, faceDetected])
-
-  // Asegurar que el botón de inicio de escaneo funcione correctamente
-  const handleStartScan = () => {
-    if (typeof startFaceScan === "function") {
-      startFaceScan()
-      console.log("Iniciando escaneo facial")
-    } else {
-      console.error("La función startFaceScan no está disponible")
-    }
-  }
-
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 border-2 border-blue-600 mb-2 max-w-[90%]">
       <div className="flex items-center justify-between mb-3">
@@ -65,12 +40,7 @@ export function IdentityPanel({
         <div>
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-medium text-blue-800">Verificación Biométrica</h4>
-            <Button
-              onClick={handleStartScan}
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-700"
-              disabled={faceDetected}
-            >
+            <Button onClick={startFaceScan} size="sm" className="bg-blue-600 hover:bg-blue-700" disabled={faceDetected}>
               {faceDetected ? "Escaneando..." : "Iniciar verificación"}
             </Button>
           </div>

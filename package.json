@@ -59,21 +59,11 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "@emotion/is-prop-valid": "latest",
-    "@testing-library/dom": "latest",
-    "@edge-runtime/vm": "latest",
-    "@types/debug": "latest",
-    "happy-dom": "latest",
-    "jsdom": "latest",
-    "@vitest/browser": "latest",
-    "@vitest/ui": "latest",
     "html2canvas": "latest",
     "framer-motion": "latest",
     "fs": "latest",
     "path": "latest",
-    "crypto": "latest",
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/react": "latest",
-    "vitest": "latest"
+    "crypto": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

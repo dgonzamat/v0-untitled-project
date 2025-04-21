@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { AlertCircle, Check, Lock, FileText } from "lucide-react"
-import { useEffect } from "react"
 
 interface SignaturePanelProps {
   signatureComplete: boolean
@@ -11,24 +10,6 @@ interface SignaturePanelProps {
 }
 
 export function SignaturePanel({ signatureComplete, completeSignature }: SignaturePanelProps) {
-  // Asegurar que el panel de firma maneje correctamente todos los estados
-  useEffect(() => {
-    // Cuando se completa la firma, actualizar la UI
-    if (signatureComplete) {
-      console.log("Firma completada")
-    }
-  }, [signatureComplete])
-
-  // Asegurar que el botón de firma funcione correctamente
-  const handleCompleteSignature = () => {
-    if (typeof completeSignature === "function") {
-      completeSignature()
-      console.log("Completando firma")
-    } else {
-      console.error("La función completeSignature no está disponible")
-    }
-  }
-
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 border-2 border-orange-400 mb-2 max-w-[90%]">
       <div className="flex items-center justify-between mb-3">
@@ -77,7 +58,7 @@ export function SignaturePanel({ signatureComplete, completeSignature }: Signatu
             </div>
             <p className="text-sm text-gray-600 mb-3">Procesando firma electrónica avanzada...</p>
             {!signatureComplete && (
-              <Button onClick={handleCompleteSignature} className="bg-orange-600 hover:bg-orange-700 mb-2">
+              <Button onClick={completeSignature} className="bg-orange-600 hover:bg-orange-700 mb-2">
                 Completar firma
               </Button>
             )}

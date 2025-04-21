@@ -1,5 +1,15 @@
 "use client"
 
+import { CardFooter } from "@/components/ui/card"
+
+import { CardDescription } from "@/components/ui/card"
+
+import { CardTitle } from "@/components/ui/card"
+
+import { CardHeader } from "@/components/ui/card"
+
+import { Card } from "@/components/ui/card"
+
 import { useState, useEffect, type ReactNode, useRef } from "react"
 import Link from "next/link"
 import {
@@ -25,19 +35,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { motion, AnimatePresence } from "framer-motion"
-import { CardFooter, CardDescription, CardTitle, CardHeader, Card } from "@/components/ui/card"
-
-// Define default sector colors to avoid undefined errors
-const defaultSectorColors = {
-  seguros: "blue",
-  banca: "green",
-  telecom: "purple",
-  retail: "orange",
-  mineria: "yellow",
-  "servicios-basicos": "teal",
-  airline: "red",
-  default: "blue",
-}
 
 interface ModuleStep {
   title: string
@@ -72,18 +69,14 @@ export function ModuleTemplate({
   technicalDetails = [],
   implementationSteps = [],
 }: ModuleTemplateProps) {
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState(1)
+  const [fullscreen, setFullscreen] = useState(false)
   const [activeTab, setActiveTab] = useState("demo")
   const [isLoading, setIsLoading] = useState(true)
   const [showHelp, setShowHelp] = useState(false)
   const demoContainerRef = useRef<HTMLDivElement>(null)
-
-  // Get the primary color for the sector using the default map
-  // This avoids the "Cannot read properties of undefined (reading 'banca')" error
-  const primaryColor = defaultSectorColors[sector as keyof typeof defaultSectorColors] || defaultSectorColors.default
 
   // Simulate loading state
   useEffect(() => {
@@ -110,20 +103,29 @@ export function ModuleTemplate({
 
   // Handle fullscreen toggle
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      const element = demoContainerRef.current || document.documentElement
-      if (element.requestFullscreen) {
-        element.requestFullscreen().catch((err) => {
+    if (demoContainerRef.current) {
+      if (!document.fullscreenElement) {
+        demoContainerRef.current.requestFullscreen().catch((err) => {
           console.error(`Error attempting to enable fullscreen: ${err.message}`)
         })
-      }
-    } else {
-      if (document.exitFullscreen) {
+      } else {
         document.exitFullscreen()
       }
     }
-    setIsFullscreen(!isFullscreen)
+    setFullscreen(!fullscreen)
   }
+
+  // Update fullscreen state based on document state
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
+    }
+  }, [])
 
   // Simulate progress when playing
   useEffect(() => {
@@ -229,12 +231,12 @@ export function ModuleTemplate({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="sm" onClick={toggleFullscreen} className="flex items-center gap-1">
-                  {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-                  <span className="hidden sm:inline">{isFullscreen ? "Salir" : "Pantalla completa"}</span>
+                  {fullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                  <span className="hidden sm:inline">{fullscreen ? "Salir" : "Pantalla completa"}</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}</p>
+                <p>{fullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -421,12 +423,12 @@ export function ModuleTemplate({
               <TabsContent value="demo" className="m-0">
                 <div
                   ref={demoContainerRef}
-                  className={`aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4 ${isFullscreen ? "fixed inset-0 z-50 p-4 bg-black flex items-center justify-center" : ""}`}
+                  className={`aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4 ${fullscreen ? "fixed inset-0 z-50 p-4 bg-black flex items-center justify-center" : ""}`}
                 >
                   {/* This would be the actual demo content */}
-                  <div className={`h-full ${isFullscreen ? "max-w-5xl mx-auto" : ""}`}>{demoContent}</div>
+                  <div className={`h-full ${fullscreen ? "max-w-5xl mx-auto" : ""}`}>{demoContent}</div>
 
-                  {isFullscreen && (
+                  {fullscreen && (
                     <div className="absolute top-4 right-4 bg-black bg-opacity-50 rounded-lg p-2 flex gap-2">
                       <Button
                         variant={playing ? "destructive" : "default"}
@@ -456,7 +458,7 @@ export function ModuleTemplate({
                   )}
                 </div>
 
-                {!isFullscreen && (
+                {!fullscreen && (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-500">
                       <Badge variant="outline" className="mr-2">

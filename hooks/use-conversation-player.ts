@@ -179,7 +179,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
             updateMessages(completeMessage)
 
             // Programar cuando terminar de "escribir"
-            const typingDuration = Math.min(completeMessage[messageIndex].text.length * 10, 1500)
+            const typingDuration = Math.min(completeMessage[messageIndex].text.length * 10, 1000)
 
             setTimeout(() => {
               const finishedTyping = [...completeMessage]
@@ -188,13 +188,8 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
                 typing: false,
               }
               updateMessages(finishedTyping)
-
-              // Asegurar que el scroll se actualice después de que el mensaje esté completo
-              setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-              }, 100)
             }, typingDuration)
-          }, 800)
+          }, 500)
         } else {
           // Si es un mensaje del cliente, mostrarlo directamente
           updatedMessages[messageIndex] = {
@@ -205,7 +200,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
           updateMessages(updatedMessages)
 
           // Programar cuando terminar de "escribir"
-          const typingDuration = Math.min(updatedMessages[messageIndex].text.length * 10, 1000)
+          const typingDuration = Math.min(updatedMessages[messageIndex].text.length * 10, 800)
 
           setTimeout(() => {
             const finishedTyping = [...updatedMessages]
@@ -214,11 +209,6 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
               typing: false,
             }
             updateMessages(finishedTyping)
-
-            // Asegurar que el scroll se actualice después de que el mensaje esté completo
-            setTimeout(() => {
-              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-            }, 100)
           }, typingDuration)
         }
       }
