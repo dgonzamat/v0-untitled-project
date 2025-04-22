@@ -26,6 +26,7 @@ import { SignaturePanel } from "@/components/demo/signature-panel"
 import { StepTimer } from "@/components/demo/step-timer"
 import { MinimalControls } from "@/components/demo/minimal-controls"
 import { MessageRenderer } from "@/components/demo/message-renderer"
+import { SpeedControl } from "@/components/demo/speed-control"
 import { downloadDemo } from "@/utils/download-demo"
 
 export default function BankingPortabilityDemo() {
@@ -221,13 +222,22 @@ export default function BankingPortabilityDemo() {
     setCurrentProcessStage(stage)
   }
 
-  const { messages, playing, autoPlay, progress, stepTimer, messagesEndRef, togglePlay, reset } = useConversationPlayer(
-    {
-      initialMessages: portabilityConversation,
-      onStageChange: handleStageChange,
-      stepDuration: 6,
-    },
-  )
+  const {
+    messages,
+    playing,
+    autoPlay,
+    progress,
+    stepTimer,
+    messagesEndRef,
+    playbackSpeed,
+    togglePlay,
+    reset,
+    changePlaybackSpeed,
+  } = useConversationPlayer({
+    initialMessages: portabilityConversation,
+    onStageChange: handleStageChange,
+    stepDuration: 6,
+  })
 
   // Función para reiniciar todo
   const handleReset = () => {
@@ -247,6 +257,7 @@ export default function BankingPortabilityDemo() {
             </div>
           </div>
           <div className="flex space-x-2 md:space-x-4">
+            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={changePlaybackSpeed} className="hidden sm:flex" />
             <Button
               variant={playing ? "destructive" : "default"}
               onClick={togglePlay}
@@ -404,6 +415,8 @@ export default function BankingPortabilityDemo() {
         togglePlay={togglePlay}
         toggleFullscreen={toggleFullscreen}
         visible={fullscreen && showMinimalControls}
+        playbackSpeed={playbackSpeed}
+        onSpeedChange={changePlaybackSpeed}
       />
 
       {/* Temporizador flotante - Solo visible cuando no está en pantalla completa */}
@@ -421,6 +434,11 @@ export default function BankingPortabilityDemo() {
             >
               <Maximize className="h-5 w-5" />
             </Button>
+          </div>
+
+          {/* Control de velocidad flotante para móviles */}
+          <div className="fixed bottom-4 left-20 z-20 sm:hidden">
+            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={changePlaybackSpeed} className="shadow-lg" />
           </div>
 
           {/* Botón de descarga */}
