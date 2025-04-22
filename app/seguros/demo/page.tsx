@@ -239,6 +239,11 @@ export default function SegurosDemo() {
     resetSignature()
   }
 
+  const handleSpeedChange = (speed: number) => {
+    console.log("Cambiando velocidad a:", speed)
+    changePlaybackSpeed(speed)
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f0f4f8]" ref={containerRef}>
       {/* Header - Solo visible cuando no está en pantalla completa */}
@@ -250,7 +255,7 @@ export default function SegurosDemo() {
             </div>
           </div>
           <div className="flex space-x-2 md:space-x-4">
-            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={changePlaybackSpeed} className="hidden sm:flex" />
+            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={handleSpeedChange} className="hidden sm:flex" />
             <Button
               variant={playing ? "destructive" : "default"}
               onClick={togglePlay}
@@ -409,7 +414,7 @@ export default function SegurosDemo() {
         toggleFullscreen={toggleFullscreen}
         visible={fullscreen && showMinimalControls}
         playbackSpeed={playbackSpeed}
-        onSpeedChange={changePlaybackSpeed}
+        onSpeedChange={handleSpeedChange}
       />
 
       {/* Temporizador flotante - Solo visible cuando no está en pantalla completa */}
@@ -431,7 +436,7 @@ export default function SegurosDemo() {
 
           {/* Control de velocidad flotante para móviles */}
           <div className="fixed bottom-4 left-20 z-20 sm:hidden">
-            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={changePlaybackSpeed} className="shadow-lg" />
+            <SpeedControl currentSpeed={playbackSpeed} onSpeedChange={handleSpeedChange} className="shadow-lg" />
           </div>
 
           {/* Botón de descarga */}

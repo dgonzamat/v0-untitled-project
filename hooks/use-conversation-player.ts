@@ -106,12 +106,13 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
         clearInterval(timerRef.current)
       }
 
-      // Ajustar el intervalo según la velocidad de reproducción
-      const interval = 1000 / playbackSpeed
-
+      // Usar un intervalo fijo de 1000ms (1 segundo)
       timerRef.current = setInterval(() => {
         setStepTimer((prev) => {
-          if (prev <= 1) {
+          // Decrementar según la velocidad de reproducción
+          const newValue = prev - playbackSpeed
+
+          if (newValue <= 0) {
             // Avanzar al siguiente paso cuando el temporizador llega a 0
             const totalMessages = messages.length
             const nextProgress = Math.min(progress + 100 / totalMessages, 100)
@@ -130,9 +131,9 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
 
             return stepDuration // Reiniciar el temporizador
           }
-          return prev - playbackSpeed // Decrementar más rápido según la velocidad
+          return newValue
         })
-      }, interval)
+      }, 1000) // Intervalo fijo de 1 segundo
 
       return () => {
         if (timerRef.current) {
@@ -178,7 +179,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
           updateMessages(updatedMessages)
 
           // Después de un pequeño delay, mostrar el mensaje real
-          // Ajustar el delay según la velocidad de reproducción
+          // Usar un tiempo fijo dividido por la velocidad
           setTimeout(() => {
             const completeMessage = [...updatedMessages]
             completeMessage[messageIndex] = {
@@ -190,7 +191,8 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
 
             // Programar cuando terminar de "escribir"
             // Ajustar la duración según la velocidad de reproducción
-            const typingDuration = Math.min(completeMessage[messageIndex].text.length * 10, 1000) / playbackSpeed
+            const baseTypingDuration = Math.min(completeMessage[messageIndex].text.length * 10, 1000)
+            const adjustedTypingDuration = baseTypingDuration / playbackSpeed
 
             setTimeout(() => {
               const finishedTyping = [...completeMessage]
@@ -199,7 +201,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
                 typing: false,
               }
               updateMessages(finishedTyping)
-            }, typingDuration)
+            }, adjustedTypingDuration)
           }, 500 / playbackSpeed)
         } else {
           // Si es un mensaje del cliente, mostrarlo directamente
@@ -212,7 +214,8 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
 
           // Programar cuando terminar de "escribir"
           // Ajustar la duración según la velocidad de reproducción
-          const typingDuration = Math.min(updatedMessages[messageIndex].text.length * 10, 800) / playbackSpeed
+          const baseTypingDuration = Math.min(updatedMessages[messageIndex].text.length * 10, 800)
+          const adjustedTypingDuration = baseTypingDuration / playbackSpeed
 
           setTimeout(() => {
             const finishedTyping = [...updatedMessages]
@@ -221,7 +224,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
               typing: false,
             }
             updateMessages(finishedTyping)
-          }, typingDuration)
+          }, adjustedTypingDuration)
         }
       }
     }
