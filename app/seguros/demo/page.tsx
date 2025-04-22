@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import {
   Play,
   Pause,
@@ -239,13 +239,32 @@ export default function SegurosDemo() {
     resetSignature()
   }
 
-  const handleSpeedChange = (speed: number) => {
-    console.log("Cambiando velocidad a:", speed)
-    changePlaybackSpeed(speed)
-  }
+  // Función para manejar cambios de velocidad
+  const handleSpeedChange = useCallback(
+    (speed: number) => {
+      console.log("SegurosDemo: Cambiando velocidad a:", speed)
+      // Validar que la velocidad es un número válido
+      if (typeof speed === "number" && !isNaN(speed) && speed > 0) {
+        changePlaybackSpeed(speed)
+      } else {
+        console.error("Velocidad inválida:", speed)
+      }
+    },
+    [changePlaybackSpeed],
+  )
+
+  // Indicador de velocidad para depuración
+  const speedIndicator = (
+    <div className="fixed top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full z-50">
+      Velocidad: {playbackSpeed}x
+    </div>
+  )
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f0f4f8]" ref={containerRef}>
+      {/* Indicador de velocidad para depuración */}
+      {speedIndicator}
+
       {/* Header - Solo visible cuando no está en pantalla completa */}
       {!fullscreen && (
         <header className="bg-white border-b py-2 px-4 flex items-center justify-between sticky top-0 z-10">

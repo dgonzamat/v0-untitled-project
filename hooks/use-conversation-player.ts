@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 
 export type MessageType = {
   sender: string
@@ -42,6 +42,12 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
   const [playbackSpeed, setPlaybackSpeed] = useState(1)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const speedRef = useRef(playbackSpeed)
+
+  // Actualizar la referencia cuando cambia la velocidad
+  useEffect(() => {
+    speedRef.current = playbackSpeed
+  }, [playbackSpeed])
 
   // Función para obtener los mensajes actuales
   const getCurrentMessages = () => messages
@@ -52,12 +58,20 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
   }
 
   // Función para cambiar la velocidad de reproducción
-  const changePlaybackSpeed = (speed: number) => {
-    setPlaybackSpeed(speed)
-  }
+  const changePlaybackSpeed = useCallback((speed: number) => {
+    console.log("useConversationPlayer: Cambiando velocidad a:", speed)
+    // Asegurarse de que la velocidad es un número válido
+    if (typeof speed === "number" && !isNaN(speed) && speed > 0) {
+      setPlaybackSpeed(speed)
+      speedRef.current = speed
+      console.log("Velocidad actualizada a:", speed)
+    } else {
+      console.error("Velocidad inválida:", speed)
+    }
+  }, [])
 
   // Función para iniciar/pausar la reproducción
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
     if (progress === 100) {
       reset()
       setTimeout(() => {
@@ -73,10 +87,10 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
         setStepTimer(stepDuration)
       }
     }
-  }
+  }, [progress, playing, stepDuration])
 
   // Función para reiniciar la demo
-  const reset = () => {
+  const reset = useCallback(() => {
     setProgress(0)
     setPlaying(false)
     setAutoPlay(false)
@@ -97,7 +111,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
         typing: false,
       })),
     )
-  }
+  }, [messages, stepDuration])
 
   // Efecto para el temporizador automático
   useEffect(() => {
@@ -110,7 +124,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
       timerRef.current = setInterval(() => {
         setStepTimer((prev) => {
           // Decrementar según la velocidad de reproducción
-          const newValue = prev - playbackSpeed
+          const newValue = prev - speedRef.current
 
           if (newValue <= 0) {
             // Avanzar al siguiente paso cuando el temporizador llega a 0
@@ -142,7 +156,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
         }
       }
     }
-  }, [autoPlay, progress, messages.length, stepDuration, playbackSpeed])
+  }, [autoPlay, progress, messages.length, stepDuration])
 
   // Controlador de la animación de la conversación
   useEffect(() => {
@@ -192,7 +206,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
             // Programar cuando terminar de "escribir"
             // Ajustar la duración según la velocidad de reproducción
             const baseTypingDuration = Math.min(completeMessage[messageIndex].text.length * 10, 1000)
-            const adjustedTypingDuration = baseTypingDuration / playbackSpeed
+            const adjustedTypingDuration = baseTypingDuration / speedRef.current
 
             setTimeout(() => {
               const finishedTyping = [...completeMessage]
@@ -202,7 +216,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
               }
               updateMessages(finishedTyping)
             }, adjustedTypingDuration)
-          }, 500 / playbackSpeed)
+          }, 500 / speedRef.current)
         } else {
           // Si es un mensaje del cliente, mostrarlo directamente
           updatedMessages[messageIndex] = {
@@ -215,7 +229,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
           // Programar cuando terminar de "escribir"
           // Ajustar la duración según la velocidad de reproducción
           const baseTypingDuration = Math.min(updatedMessages[messageIndex].text.length * 10, 800)
-          const adjustedTypingDuration = baseTypingDuration / playbackSpeed
+          const adjustedTypingDuration = baseTypingDuration / speedRef.current
 
           setTimeout(() => {
             const finishedTyping = [...updatedMessages]
@@ -238,7 +252,7 @@ export function useConversationPlayer({ initialMessages, onStageChange, stepDura
         timerRef.current = null
       }
     }
-  }, [playing, autoPlay, progress, messages, onStageChange, playbackSpeed])
+  }, [playing, autoPlay, progress, messages, onStageChange])
 
   // Auto-scroll al último mensaje
   useEffect(() => {
